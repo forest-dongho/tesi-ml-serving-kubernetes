@@ -1,0 +1,19 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: "InferenceService"
+metadata:
+  name: "breast-cancer-gradient-boosting"
+  namespace: "kserve-inference"
+  annotations:
+    serving.kserve.io/deploymentMode: "RawDeployment"
+    autoscaling.knative.dev/metric: "cpu"
+    autoscaling.knative.dev/target: "70"
+spec:
+  predictor:
+    serviceAccountName: kserve-sa
+    minReplicas: 1
+    maxReplicas: 30
+    sklearn:
+      storageUri: "s3://mlpipeline/gradient-boosting/model/"
+      resources:
+        requests:
+          cpu: "1"
